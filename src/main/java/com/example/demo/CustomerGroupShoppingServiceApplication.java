@@ -9,6 +9,7 @@ public class CustomerGroupShoppingServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CustomerGroupShoppingServiceApplication.class, args);
 		// avichai
+		//sapir
 	}
 
 }
