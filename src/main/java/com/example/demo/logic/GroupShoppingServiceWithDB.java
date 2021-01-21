@@ -3,8 +3,11 @@ package com.example.demo.logic;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.boundaries.GroupBoundary;
@@ -62,12 +65,49 @@ public class GroupShoppingServiceWithDB implements GroupShoppingService{
 
 	@Override
 	public List<GroupBoundary> getAllGroups(int size, int page, String sortAttr, String order) {
-		// TODO Auto-generated method stub
-		return null;
+		Direction direction = order.equals(Direction.ASC.toString()) ? Direction.ASC : Direction.DESC;
+		return this.groupDao.findAll(PageRequest.of(page,size,direction, sortAttr)).stream()
+		.map(this.converter::group_EntityToBoundary).collect(Collectors.toList());
 	}
-	
-	
-	
-	
-	
+
+	@Override
+	public List<GroupBoundary> getAllPostsByInitiator(String email, int size, int page, String sortAttr,
+			String order) {
+		Direction direction = order.equals(Direction.ASC.toString()) ? Direction.ASC : Direction.DESC;
+		return this.groupDao.findAllByGroupInitiator_Email(email,PageRequest.of(page,size,direction, sortAttr)).stream()
+		.map(this.converter::group_EntityToBoundary).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<GroupBoundary> getAllPostsByMinNumOfMembers(String numOfMembers, int size, int page, String sortAttr,
+			String order) {
+		Direction direction = order.equals(Direction.ASC.toString()) ? Direction.ASC : Direction.DESC;
+		return this.groupDao.findAllByNumOfMembersGreaterThanEqual(Integer.parseInt(numOfMembers),PageRequest.of(page,size,direction, sortAttr)).stream()
+		.map(this.converter::group_EntityToBoundary).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<GroupBoundary> getAllPostsByMaxNumOfMembers(String numOfMembers, int size, int page, String sortAttr,
+			String order) {
+		Direction direction = order.equals(Direction.ASC.toString()) ? Direction.ASC : Direction.DESC;
+		return this.groupDao.findAllByNumOfMembersLessThanEqual(Integer.parseInt(numOfMembers),PageRequest.of(page,size,direction, sortAttr)).stream()
+		.map(this.converter::group_EntityToBoundary).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<GroupBoundary> getAllPostsByMinDiscount(String discount, int size, int page, String sortAttr,
+			String order) {
+		Direction direction = order.equals(Direction.ASC.toString()) ? Direction.ASC : Direction.DESC;
+		return this.groupDao.findAllByDiscountGreaterThanEqual(Double.parseDouble(discount),PageRequest.of(page,size,direction, sortAttr)).stream()
+		.map(this.converter::group_EntityToBoundary).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<GroupBoundary> getAllPostsByCreationTime(String stringDate, int size, int page, String sortAttr,
+			String order) {
+		Date date = this.validator.validDate(stringDate);
+		Direction direction = order.equals(Direction.ASC.toString()) ? Direction.ASC : Direction.DESC;
+		return this.groupDao.findAllByDateOpenedGreaterThanEqual(date,PageRequest.of(page,size,direction, sortAttr)).stream()
+		.map(this.converter::group_EntityToBoundary).collect(Collectors.toList());
+	}	
 }
