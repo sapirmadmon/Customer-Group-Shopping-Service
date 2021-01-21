@@ -14,4 +14,17 @@ public interface GroupShoppingService {
 
 	public void deleteAll();
 
+	public List<GroupBoundary> getAllPostsByInitiator(String filterValue, int size, int page, String sortAttr,
+			String order);
+
+	public List<GroupBoundary> getAllPostsByMinNumOfMembers(String filterValue, int size, int page, String sortAttr,
+			String order);
+
+	public List<GroupBoundary> getAllPostsByMaxNumOfMembers(String filterValue, int size, int page, String sortAttr, String order);
+
+	public List<GroupBoundary> getAllPostsByMinDiscount(String filterValue, int size, int page, String sortAttr,
+			String order);
+	
+	public List<GroupBoundary> getAllPostsByCreationTime(String filterValue, int size, int page, String sortAttr,
+			String order);
 }
