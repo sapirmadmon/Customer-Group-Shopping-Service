@@ -1,4 +1,4 @@
-package com.example.boundaries;
+package com.cloud.boundaries;
 
 public class UserBoundary {
 	private String email;

@@ -1,0 +1,34 @@
+package com.cloud.validator;
+
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+import org.springframework.stereotype.Component;
+import com.cloud.utility.TimeEnum;
+
+@Component
+public class Validator {
+
+	public Date validDate(String value) {
+		TimeEnum timeEnum;
+		try {
+			timeEnum = TimeEnum.valueOf(value);
+		} catch (Exception ex) {
+			return null;
+		}
+		System.err.println(timeEnum);
+		switch (timeEnum) {
+		case lastDay:
+			return new Date(System.currentTimeMillis() - (TimeUnit.DAYS.toMillis(1))); // day before
+
+		case lastWeek:
+			return new Date(System.currentTimeMillis() - (TimeUnit.DAYS.toMillis(7)));// week before
+
+		case lastMonth:
+			return new Date(System.currentTimeMillis() - (TimeUnit.DAYS.toMillis(30))); // month before
+
+		default:
+			return null;
+		}
+	}
+
+}

@@ -1,4 +1,4 @@
-package com.example.data;
+package com.cloud.data;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

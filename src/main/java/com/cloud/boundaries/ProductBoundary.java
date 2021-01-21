@@ -1,4 +1,4 @@
-package com.example.boundaries;
+package com.cloud.boundaries;
 
 public class ProductBoundary {
 	private Long productId;

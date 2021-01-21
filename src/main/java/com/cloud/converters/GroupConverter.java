@@ -1,16 +1,14 @@
-package com.example.converters;
+package com.cloud.converters;
 
 import java.util.stream.Collectors;
-
-import com.example.boundaries.GroupBoundary;
-import com.example.boundaries.ProductBoundary;
-import com.example.boundaries.UserBoundary;
-import com.example.data.GroupEntity;
-import com.example.data.ProductEntity;
-import com.example.data.UserEntity;
+import com.cloud.boundaries.GroupBoundary;
+import com.cloud.boundaries.ProductBoundary;
+import com.cloud.boundaries.UserBoundary;
+import com.cloud.data.GroupEntity;
+import com.cloud.data.ProductEntity;
+import com.cloud.data.UserEntity;
 
 public class GroupConverter {
-	
 	// group boundary -> entity
 	public GroupEntity group_BoundarytoEntity(GroupBoundary boundary) {
 		GroupEntity entity = new GroupEntity();
