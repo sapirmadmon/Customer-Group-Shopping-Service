@@ -2,16 +2,19 @@ package com.example.demo.logic;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.boundaries.GroupBoundary;
+import com.example.demo.boundaries.UserBoundary;
 import com.example.demo.converters.GroupConverter;
 import com.example.demo.dal.GroupDao;
 import com.example.demo.data.GroupEntity;
 import com.example.demo.exceptions.EmptyProductException;
+import com.example.demo.exceptions.GroupNotFoundException;
 import com.example.demo.exceptions.InvalidEmailException;
 import com.example.demo.validator.Validator;
 
@@ -52,8 +55,14 @@ public class GroupShoppingServiceWithDB implements GroupShoppingService{
 		
 		//TODO more check 
 		
+		for(UserBoundary u:group.getMembers())
+			if(!(this.validator.validateUserEmail(u.getEmail())))
+				throw new InvalidEmailException("Email must be in the format of example@example.com");
+		
+		
 		group.setDateOpened(new Date());
 		group.setGroupId(UUID.randomUUID().toString()); 
+		group.setNumOfMembers(group.getMembers().size());
 		
 		GroupEntity savedGroup = this.groupDao.save(this.converter.group_BoundarytoEntity(group));
 		
@@ -65,9 +74,47 @@ public class GroupShoppingServiceWithDB implements GroupShoppingService{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void updateGroup(String groupId, GroupBoundary group) {
+		
+		Optional<GroupEntity> groupFromDB = this.groupDao.findById(groupId);
+		if (!groupFromDB.isPresent())
+			throw new GroupNotFoundException("could not found group by groupId: " + groupId);
+		
+		
+		//If a group with the ID was found
+		GroupBoundary existingGroup = this.converter.group_EntityToBoundary(groupFromDB.get());
+
+		if(group != null) {
+			
+			if(group.getProdQuantity() > 0) {
+				existingGroup.setProdQuantity(group.getProdQuantity());
+			}
+			
+			if(!(group.getMembers().isEmpty())) {
+				for(UserBoundary u:group.getMembers())
+					if(!(this.validator.validateUserEmail(u.getEmail())))
+						throw new InvalidEmailException("Email must be in the format of example@example.com");
+				
+				existingGroup.getMembers().addAll(group.getMembers());
+				
+				existingGroup.setNumOfMembers(existingGroup.getMembers().size()); //Updated number of group members following the addition of members
+			}
+			
+		}
+		
+		this.groupDao.save(this.converter.group_BoundarytoEntity(existingGroup));
+	}
+
+	
+	@Override
+	public void deleteAll() {
+		this.groupDao.deleteAll();
+		
+	}
 	
 	
-	
-	
+
 	
 }

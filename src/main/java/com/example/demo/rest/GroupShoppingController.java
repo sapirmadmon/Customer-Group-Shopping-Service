@@ -2,6 +2,7 @@ package com.example.demo.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,5 +45,23 @@ public class GroupShoppingController {
 		.toArray(new GroupBoundary[0]);
 	}
 
+	
+	
+	@RequestMapping(
+			path = "/groups/{groupId}",
+			method = RequestMethod.PUT,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void updateGroup(@RequestBody GroupBoundary group, @PathVariable("groupId") String groupId) {
+		this.groupShoppingService.updateGroup(groupId, group);
+	}
+	
+	
+	@RequestMapping(
+			path = "/groups",
+			method = RequestMethod.DELETE)
+	public void deleteAllGroup() {
+		this.groupShoppingService.deleteAll();
+	}
+	
 	
 }

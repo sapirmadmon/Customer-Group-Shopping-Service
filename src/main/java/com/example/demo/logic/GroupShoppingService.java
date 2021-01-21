@@ -10,4 +10,8 @@ public interface GroupShoppingService {
 
 	public List<GroupBoundary> getAllGroups(int size, int page, String sortAttr, String order);
 
+	public void updateGroup(String groupId, GroupBoundary group);
+
+	public void deleteAll();
+
 }

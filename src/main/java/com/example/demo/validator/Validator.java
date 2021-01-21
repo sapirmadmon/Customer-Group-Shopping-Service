@@ -26,7 +26,7 @@ public class Validator {
 		Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(userEmail);
 		return matcher.matches();
 	}
-	
+
 	
 	public Date validDate(String value) {
 		TimeEnum timeEnum;
