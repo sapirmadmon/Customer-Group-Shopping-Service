@@ -1,4 +1,4 @@
-package com.cloud.data;
+package com.example.demo.data;
 
 import java.util.Date;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "groups")
 public class GroupEntity {
 	
-	@Id private Long groupId;
+	@Id private String groupId;
 	private UserEntity groupInitiator;
 	private int numOfMembers;
 	private List<UserEntity> members;
@@ -25,7 +25,7 @@ public class GroupEntity {
 		super();
 	}
 
-	public GroupEntity(Long groupId, UserEntity groupInitiator, int numOfMembers, List<UserEntity> members,
+	public GroupEntity(String groupId, UserEntity groupInitiator, int numOfMembers, List<UserEntity> members,
 			ProductEntity product, int prodQuantity, double discount, Date dateOpened, int validity,
 			Map<String, Object> extras) {
 		super();
@@ -41,11 +41,11 @@ public class GroupEntity {
 		this.extras = extras;
 	}
 
-	public Long getGroupId() {
+	public String getGroupId() {
 		return groupId;
 	}
 
-	public void setGroupId(Long groupId) {
+	public void setGroupId(String groupId) {
 		this.groupId = groupId;
 	}
 

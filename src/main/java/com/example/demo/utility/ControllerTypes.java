@@ -1,4 +1,4 @@
-package com.cloud.utility;
+package com.example.demo.utility;
 
 public class ControllerTypes {
 	

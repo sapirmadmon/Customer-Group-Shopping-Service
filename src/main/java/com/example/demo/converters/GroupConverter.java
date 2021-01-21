@@ -1,13 +1,17 @@
-package com.cloud.converters;
+package com.example.demo.converters;
 
 import java.util.stream.Collectors;
-import com.cloud.boundaries.GroupBoundary;
-import com.cloud.boundaries.ProductBoundary;
-import com.cloud.boundaries.UserBoundary;
-import com.cloud.data.GroupEntity;
-import com.cloud.data.ProductEntity;
-import com.cloud.data.UserEntity;
 
+import org.springframework.stereotype.Component;
+
+import com.example.demo.boundaries.GroupBoundary;
+import com.example.demo.boundaries.ProductBoundary;
+import com.example.demo.boundaries.UserBoundary;
+import com.example.demo.data.GroupEntity;
+import com.example.demo.data.ProductEntity;
+import com.example.demo.data.UserEntity;
+
+@Component
 public class GroupConverter {
 	// group boundary -> entity
 	public GroupEntity group_BoundarytoEntity(GroupBoundary boundary) {

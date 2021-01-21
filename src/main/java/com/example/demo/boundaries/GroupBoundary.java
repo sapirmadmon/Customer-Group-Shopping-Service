@@ -1,11 +1,11 @@
-package com.cloud.boundaries;
+package com.example.demo.boundaries;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 public class GroupBoundary {
-	private Long groupId;
+	private String groupId;
 	private UserBoundary groupInitiator;
 	private int numOfMembers;
 	private List<UserBoundary> members;
@@ -20,7 +20,7 @@ public class GroupBoundary {
 		super();
 	}
 
-	public GroupBoundary(Long groupId, UserBoundary groupInitiator, int numOfMembers, List<UserBoundary> members,
+	public GroupBoundary(String groupId, UserBoundary groupInitiator, int numOfMembers, List<UserBoundary> members,
 			ProductBoundary product, int prodQuantity, double discount, Date dateOpened, int validity,
 			Map<String, Object> extras) {
 		super();
@@ -36,11 +36,11 @@ public class GroupBoundary {
 		this.extras = extras;
 	}
 
-	public Long getGroupId() {
+	public String getGroupId() {
 		return groupId;
 	}
 
-	public void setGroupId(Long groupId) {
+	public void setGroupId(String groupId) {
 		this.groupId = groupId;
 	}
 
