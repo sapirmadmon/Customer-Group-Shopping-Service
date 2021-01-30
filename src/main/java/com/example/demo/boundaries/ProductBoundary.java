@@ -19,4 +19,11 @@ public class ProductBoundary {
 	public void setProductId(Long productId) {
 		this.productId = productId;
 	}
+
+	@Override
+	public String toString() {
+		return "ProductBoundary [productId=" + productId + "]";
+	}
+	
+	
 }

@@ -115,6 +115,15 @@ public class GroupBoundary {
 	public void setExtras(Map<String, Object> extras) {
 		this.extras = extras;
 	}
+
+	@Override
+	public String toString() {
+		return "GroupBoundary [groupId=" + this.groupId + ", groupInitiator=" + this.groupInitiator + ", numOfMembers="
+				+ this.numOfMembers + ", members=" + this.members + ", product=" + this.product + ", prodQuantity=" + this.prodQuantity
+				+ ", discount=" + this.discount + ", dateOpened=" + this.dateOpened + ", validity=" + this.validity + ", extras="
+				+ this.extras + "]";
+	}
+
 	
 	
 }

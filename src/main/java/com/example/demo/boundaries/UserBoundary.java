@@ -20,5 +20,11 @@ public class UserBoundary {
 		this.email = email;
 	}
 
+	@Override
+	public String toString() {
+		return "UserBoundary [email=" + email + "]";
+	}
+
+	
 	
 }
