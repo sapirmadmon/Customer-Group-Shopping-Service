@@ -50,7 +50,7 @@ Product Microservice API:
 			<td><b>POST</b></td>
 			<td>/groups</td>
 			<td>An action that receives purchase group information and stores it in the system.<br>
-      *The user must be registered for a user management service. And the product must be registered with the product management service.</td>
+      *The user must be registered to the User Management Service. And the product must be registered to the Product Management Service.</td>
 		</tr>   
     <tr>
 			<td><b>PUT</b></td>
