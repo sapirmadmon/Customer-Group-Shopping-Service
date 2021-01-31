@@ -18,7 +18,10 @@ import com.example.demo.dal.GroupDao;
 import com.example.demo.data.GroupEntity;
 import com.example.demo.exceptions.EmptyProductException;
 import com.example.demo.exceptions.GroupNotFoundException;
+import com.example.demo.exceptions.InvalidDiscountException;
 import com.example.demo.exceptions.InvalidEmailException;
+import com.example.demo.services.ProductBasedShoppingProductsService;
+import com.example.demo.services.UserBasedUserManagementService;
 import com.example.demo.validator.Validator;
 
 @Service
@@ -26,6 +29,8 @@ public class GroupShoppingServiceWithDB implements GroupShoppingService{
 	private GroupDao groupDao;
 	private GroupConverter converter;
 	private Validator validator;
+	private UserBasedUserManagementService userBasedUserManagement;
+	private ProductBasedShoppingProductsService productBasedProductsManagement;
 	
 	@Autowired
 	public GroupShoppingServiceWithDB(GroupDao groupDao) {
@@ -43,89 +48,118 @@ public class GroupShoppingServiceWithDB implements GroupShoppingService{
 		this.validator = validator;
 	}
 
+	@Autowired
+	public void setUserBasedUserManagement(UserBasedUserManagementService userBasedUserManagement) {
+		this.userBasedUserManagement = userBasedUserManagement;
+	}
+	
+	@Autowired
+	public void setProductBasedProductsManagement(ProductBasedShoppingProductsService productBasedProductsManagement) {
+		this.productBasedProductsManagement = productBasedProductsManagement;
+	}
+
+
 	@Override
 	public GroupBoundary createGroup(GroupBoundary group) {
-		
+
 		//Check if the email is OK
 		if (!this.validator.validateUserEmail(group.getGroupInitiator().getEmail())) {
 			throw new InvalidEmailException("Email must be in the format of example@example.com");
 		} 
-		
+
+		//Check if the user (initiator) is in the User Management System
+		try {
+			userBasedUserManagement.getUserFromUserManagement(group.getGroupInitiator().getEmail());
+		} catch (Exception e) {
+			throw new InvalidEmailException("Email does not exist in the system");
+		}
+
+
 		//Check if the product ID is not null
 		if(group.getProduct().getProductId() == null) {
 			throw new EmptyProductException("The product ID is empty");
 		}
+
+		//Check if the product id is in the Product Management System
+		try {
+			productBasedProductsManagement.getProductFromShoppingProductsManagement(group.getProduct().getProductId());
+		} catch (Exception e) {
+			throw new EmptyProductException("The product does not exist in the system");
+		}
 		
-		//TODO more check 
-		
-		for(UserBoundary u:group.getMembers())
+		for(UserBoundary u:group.getMembers()) {
 			if(!(this.validator.validateUserEmail(u.getEmail())))
 				throw new InvalidEmailException("Email must be in the format of example@example.com");
+		}
+
+		//Check if is discount entered is valid
+		if(group.getDiscount() < 0 || group.getDiscount() > 1) {
+			throw new InvalidDiscountException("The discount entered is invalid");
+		}
 		
-		
-		group.setDateOpened(new Date());
-		group.setGroupId(UUID.randomUUID().toString()); 
-		group.setNumOfMembers(group.getMembers().size());
-		
+		group.setDateOpened(new Date()); //The current date the group was created 
+		group.setGroupId(UUID.randomUUID().toString()); //The group number is randomly generated
+		group.setNumOfMembers(group.getMembers().size()); //Number of group members is counted by the size of the list members 
+
 		GroupEntity savedGroup = this.groupDao.save(this.converter.group_BoundarytoEntity(group));
-		
 		return this.converter.group_EntityToBoundary(savedGroup);
 	}
+
+
 
 	@Override
 	public List<GroupBoundary> getAllGroups(int size, int page, String sortAttr, String order) {
 		Direction direction = order.equals(Direction.ASC.toString()) ? Direction.ASC : Direction.DESC;
 		return this.groupDao.findAll(PageRequest.of(page,size,direction, sortAttr)).stream()
-		.map(this.converter::group_EntityToBoundary).collect(Collectors.toList());
+				.map(this.converter::group_EntityToBoundary).collect(Collectors.toList());
 	}
 
 	@Override
 	public void updateGroup(String groupId, GroupBoundary group) {
-		
+
 		Optional<GroupEntity> groupFromDB = this.groupDao.findById(groupId);
 		if (!groupFromDB.isPresent())
 			throw new GroupNotFoundException("could not found group by groupId: " + groupId);
-		
-		
+
+
 		//If a group with the ID was found
 		GroupBoundary existingGroup = this.converter.group_EntityToBoundary(groupFromDB.get());
 
 		if(group != null) {
-			
+
 			if(group.getProdQuantity() > 0) {
 				existingGroup.setProdQuantity(group.getProdQuantity());
 			}
-			
+
 			if(!(group.getMembers().isEmpty())) {
 				for(UserBoundary u:group.getMembers())
 					if(!(this.validator.validateUserEmail(u.getEmail())))
 						throw new InvalidEmailException("Email must be in the format of example@example.com");
-				
+
 				existingGroup.getMembers().addAll(group.getMembers());
-				
+
 				existingGroup.setNumOfMembers(existingGroup.getMembers().size()); //Updated number of group members following the addition of members
 			}
-			
+
 		}
-		
+
 		this.groupDao.save(this.converter.group_BoundarytoEntity(existingGroup));
 	}
 
-	
+
 	@Override
 	public void deleteAll() {
 		this.groupDao.deleteAll();
-		
 	}
-	
-	
+
+
 
 	@Override
 	public List<GroupBoundary> getAllPostsByInitiator(String email, int size, int page, String sortAttr,
 			String order) {
 		Direction direction = order.equals(Direction.ASC.toString()) ? Direction.ASC : Direction.DESC;
 		return this.groupDao.findAllByGroupInitiator_Email(email,PageRequest.of(page,size,direction, sortAttr)).stream()
-		.map(this.converter::group_EntityToBoundary).collect(Collectors.toList());
+				.map(this.converter::group_EntityToBoundary).collect(Collectors.toList());
 	}
 
 	@Override
@@ -133,7 +167,7 @@ public class GroupShoppingServiceWithDB implements GroupShoppingService{
 			String order) {
 		Direction direction = order.equals(Direction.ASC.toString()) ? Direction.ASC : Direction.DESC;
 		return this.groupDao.findAllByNumOfMembersGreaterThanEqual(Integer.parseInt(numOfMembers),PageRequest.of(page,size,direction, sortAttr)).stream()
-		.map(this.converter::group_EntityToBoundary).collect(Collectors.toList());
+				.map(this.converter::group_EntityToBoundary).collect(Collectors.toList());
 	}
 
 	@Override
@@ -141,7 +175,7 @@ public class GroupShoppingServiceWithDB implements GroupShoppingService{
 			String order) {
 		Direction direction = order.equals(Direction.ASC.toString()) ? Direction.ASC : Direction.DESC;
 		return this.groupDao.findAllByNumOfMembersLessThanEqual(Integer.parseInt(numOfMembers),PageRequest.of(page,size,direction, sortAttr)).stream()
-		.map(this.converter::group_EntityToBoundary).collect(Collectors.toList());
+				.map(this.converter::group_EntityToBoundary).collect(Collectors.toList());
 	}
 
 	@Override
@@ -149,7 +183,7 @@ public class GroupShoppingServiceWithDB implements GroupShoppingService{
 			String order) {
 		Direction direction = order.equals(Direction.ASC.toString()) ? Direction.ASC : Direction.DESC;
 		return this.groupDao.findAllByDiscountGreaterThanEqual(Double.parseDouble(discount),PageRequest.of(page,size,direction, sortAttr)).stream()
-		.map(this.converter::group_EntityToBoundary).collect(Collectors.toList());
+				.map(this.converter::group_EntityToBoundary).collect(Collectors.toList());
 	}
 
 	@Override
@@ -158,7 +192,7 @@ public class GroupShoppingServiceWithDB implements GroupShoppingService{
 		Date date = this.validator.validDate(stringDate);
 		Direction direction = order.equals(Direction.ASC.toString()) ? Direction.ASC : Direction.DESC;
 		return this.groupDao.findAllByDateOpenedGreaterThanEqual(date,PageRequest.of(page,size,direction, sortAttr)).stream()
-		.map(this.converter::group_EntityToBoundary).collect(Collectors.toList());
+				.map(this.converter::group_EntityToBoundary).collect(Collectors.toList());
 	}	
 
 }
