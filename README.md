@@ -7,7 +7,7 @@ This Microservice built in Java using SpringBoot framework, with Gradle build to
 The database was configured using MongoDB to store the data.
 
 ## Usage
-Product Microservice API:
+Group Shopping Microservice API:
 <table>
     <th>Method</th>
     <th>Route</th>
