@@ -81,7 +81,7 @@ Group Shopping Microservice API:
 “product”:{
     "id":"4684"
 },
-“prodQuantity”: 60,
+“prodQuantity”: 60, 
 “discount”: 0.05,
 “dateOpened”: “2021-01-14T04:12:39.053+0000”,
 “validity”: 30,
