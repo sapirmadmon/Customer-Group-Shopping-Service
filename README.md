@@ -73,7 +73,7 @@ Group Shopping Microservice API:
 “initiator”: {
     "email":"user1@gmail.com"
 },
-“numOfMembers”: 50,
+“numOfMembers”: 2,
 “members”: [ {"email": "member1@gmail.com”}, 
 		{"email": "member2@gmail.com”}, 
 		{"email": "member3@gmail.com”}, 
@@ -82,7 +82,7 @@ Group Shopping Microservice API:
     "id":"4684"
 },
 “prodQuantity”: 60, 
-“discount”: 0.05,
+“discount”: 0.4,
 “dateOpened”: “2021-01-14T04:12:39.053+0000”,
 “validity”: 30,
 “extras”: {
