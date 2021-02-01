@@ -1,4 +1,4 @@
-package com.example.demo.services;
+package com.example.demo.consumers;
 
 import javax.annotation.PostConstruct;
 
@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.example.demo.boundaries.UserBoundary;
+import com.example.demo.boundaries.User;
 import com.example.demo.exceptions.InvalidEmailException;
 
 @Component
@@ -20,12 +20,12 @@ public class UserBasedUserManagementService {
 	private int port;
 	
 	
-	@Value("${userport:8080}")
+	@Value("${userManagementService.port:8080}")
 	public void setPort(String port) {
 		this.port = Integer.parseInt(port);
 	}
 	
-	@Value("${productHost:localhost}")
+	@Value("${userManagementService.host:localhost}")
 	public void setHost(String host) {
 		this.host = host;
 	}
@@ -35,15 +35,14 @@ public class UserBasedUserManagementService {
 	public void init() {
 		this.restTemplate = new RestTemplate();
 		
-		//this.url = "http://localhost:" + port + "/users/{email}";
 		this.url = "http://" + host + ":" + port;
 	}
 	
 	
 	public void getUserFromUserManagement(String email) {
-		ResponseEntity<UserBoundary> user;
+		ResponseEntity<User> user;
 		try {
-			user = restTemplate.getForEntity(this.url + "/users/{email}", UserBoundary.class, email);
+			user = restTemplate.getForEntity(this.url + "/users/{email}", User.class, email);
 		} catch (Exception e) {
 			throw new InvalidEmailException("Email does not exist in the system");
 		}

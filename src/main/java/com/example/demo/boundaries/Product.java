@@ -1,13 +1,13 @@
 package com.example.demo.boundaries;
 
-public class ProductBoundary {
+public class Product {
 	private Long productId;
 
-	public ProductBoundary() {
+	public Product() {
 		super();
 	}
 
-	public ProductBoundary(Long productId) {
+	public Product(Long productId) {
 		super();
 		this.productId = productId;
 	}

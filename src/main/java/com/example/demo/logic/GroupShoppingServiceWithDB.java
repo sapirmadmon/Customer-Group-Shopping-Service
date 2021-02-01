@@ -12,7 +12,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.boundaries.GroupBoundary;
-import com.example.demo.boundaries.UserBoundary;
+import com.example.demo.boundaries.User;
+import com.example.demo.consumers.ProductBasedShoppingProductsService;
+import com.example.demo.consumers.UserBasedUserManagementService;
 import com.example.demo.converters.GroupConverter;
 import com.example.demo.dal.GroupDao;
 import com.example.demo.data.GroupEntity;
@@ -20,8 +22,6 @@ import com.example.demo.exceptions.EmptyProductException;
 import com.example.demo.exceptions.GroupNotFoundException;
 import com.example.demo.exceptions.InvalidDiscountException;
 import com.example.demo.exceptions.InvalidEmailException;
-import com.example.demo.services.ProductBasedShoppingProductsService;
-import com.example.demo.services.UserBasedUserManagementService;
 import com.example.demo.validator.Validator;
 
 @Service
@@ -31,7 +31,7 @@ public class GroupShoppingServiceWithDB implements GroupShoppingService{
 	private Validator validator;
 	private UserBasedUserManagementService userBasedUserManagement;
 	private ProductBasedShoppingProductsService productBasedProductsManagement;
-	
+
 	@Autowired
 	public GroupShoppingServiceWithDB(GroupDao groupDao) {
 		super();
@@ -52,26 +52,26 @@ public class GroupShoppingServiceWithDB implements GroupShoppingService{
 	public void setUserBasedUserManagement(UserBasedUserManagementService userBasedUserManagement) {
 		this.userBasedUserManagement = userBasedUserManagement;
 	}
-	
+
 	@Autowired
 	public void setProductBasedProductsManagement(ProductBasedShoppingProductsService productBasedProductsManagement) {
 		this.productBasedProductsManagement = productBasedProductsManagement;
 	}
 
-
+	
 	@Override
 	public GroupBoundary createGroup(GroupBoundary group) {
 
 		//Check if the email is OK
 		if (!this.validator.validateUserEmail(group.getGroupInitiator().getEmail())) {
-			throw new InvalidEmailException("Email must be in the format of example@example.com");
+			throw new InvalidEmailException("Email of initiator must be in the format of example@example.com");
 		} 
 
 		//Check if the user (initiator) is in the User Management System
 		try {
 			userBasedUserManagement.getUserFromUserManagement(group.getGroupInitiator().getEmail());
 		} catch (Exception e) {
-			throw new InvalidEmailException("Email does not exist in the system");
+			throw new InvalidEmailException("Email of initiator: " + group.getGroupInitiator().getEmail() + " does not exist in the system");
 		}
 
 
@@ -86,10 +86,16 @@ public class GroupShoppingServiceWithDB implements GroupShoppingService{
 		} catch (Exception e) {
 			throw new EmptyProductException("The product does not exist in the system");
 		}
-		
-		for(UserBoundary u:group.getMembers()) {
+
+
+		for(User u:group.getMembers()) {
 			if(!(this.validator.validateUserEmail(u.getEmail())))
-				throw new InvalidEmailException("Email must be in the format of example@example.com");
+				throw new InvalidEmailException("Email of member: " +  u.getEmail() + " must be in the format of example@example.com");
+			try {
+				userBasedUserManagement.getUserFromUserManagement(u.getEmail());
+			} catch (Exception e) {
+				throw new InvalidEmailException("Email of member: " + u.getEmail() + " does not exist in the system");
+			}
 		}
 
 		//Check if is discount entered is valid
@@ -97,10 +103,12 @@ public class GroupShoppingServiceWithDB implements GroupShoppingService{
 			throw new InvalidDiscountException("The discount entered is invalid");
 		}
 		
+		
 		group.setDateOpened(new Date()); //The current date the group was created 
 		group.setGroupId(UUID.randomUUID().toString()); //The group number is randomly generated
 		group.setNumOfMembers(group.getMembers().size()); //Number of group members is counted by the size of the list members 
 
+		
 		GroupEntity savedGroup = this.groupDao.save(this.converter.group_BoundarytoEntity(group));
 		return this.converter.group_EntityToBoundary(savedGroup);
 	}
@@ -132,10 +140,15 @@ public class GroupShoppingServiceWithDB implements GroupShoppingService{
 			}
 
 			if(!(group.getMembers().isEmpty())) {
-				for(UserBoundary u:group.getMembers())
+				for(User u:group.getMembers()) {
 					if(!(this.validator.validateUserEmail(u.getEmail())))
-						throw new InvalidEmailException("Email must be in the format of example@example.com");
-
+						throw new InvalidEmailException("Email of member: " +  u.getEmail() + " must be in the format of example@example.com");
+					try {
+						userBasedUserManagement.getUserFromUserManagement(u.getEmail());
+					} catch (Exception e) {
+						throw new InvalidEmailException("Email of member: " + u.getEmail() + " does not exist in the system");
+					}
+				}
 				existingGroup.getMembers().addAll(group.getMembers());
 
 				existingGroup.setNumOfMembers(existingGroup.getMembers().size()); //Updated number of group members following the addition of members

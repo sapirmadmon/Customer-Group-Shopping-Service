@@ -5,11 +5,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.boundaries.GroupBoundary;
-import com.example.demo.boundaries.ProductBoundary;
-import com.example.demo.boundaries.UserBoundary;
+import com.example.demo.boundaries.Product;
+import com.example.demo.boundaries.User;
 import com.example.demo.data.GroupEntity;
-import com.example.demo.data.ProductEntity;
-import com.example.demo.data.UserEntity;
+
 
 @Component
 public class GroupConverter {
@@ -46,29 +45,31 @@ public class GroupConverter {
 	}
 	
 	// product boundary -> entity
-	public ProductEntity product_BoundaryToEntity(ProductBoundary boundary) {
-		ProductEntity entity = new ProductEntity();
-		entity.setId(boundary.getProductId());
+	public Product product_BoundaryToEntity(Product boundary) {
+		Product entity = new Product();
+		entity.setProductId(boundary.getProductId());
+		//entity.setId(boundary.getProductId());
 		return entity;
 	}
 	
 	// product entity -> boundary
-	public ProductBoundary product_EntityToBoundary(ProductEntity entity) {
-		ProductBoundary boundary = new ProductBoundary();
-		boundary.setProductId(entity.getId());
+	public Product product_EntityToBoundary(Product entity) {
+		Product boundary = new Product();
+		boundary.setProductId(entity.getProductId());
+		//boundary.setProductId(entity.getId());
 		return boundary;
 	}
 	
 	// user boundary -> entity
-	public UserEntity user_BoundaryToEntity(UserBoundary boundary) {
-		UserEntity entity = new UserEntity();
+	public User user_BoundaryToEntity(User boundary) {
+		User entity = new User();
 		entity.setEmail(boundary.getEmail());
 		return entity;
 	}
 	
 	// user entity -> boundary
-	public UserBoundary user_EntityToBoundary(UserEntity entity) {
-		UserBoundary boundary = new UserBoundary();
+	public User user_EntityToBoundary(User entity) {
+		User boundary = new User();
 		boundary.setEmail(entity.getEmail());
 		return boundary;
 	}

@@ -7,26 +7,31 @@ import java.util.Map;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.example.demo.boundaries.Product;
+import com.example.demo.boundaries.User;
+
+
 @Document(collection = "groups")
 public class GroupEntity {
 	
 	@Id private String groupId;
-	private UserEntity groupInitiator;
+	private User groupInitiator;
 	private int numOfMembers;
-	private List<UserEntity> members;
-	private ProductEntity product;
+	private List<User> members;
+	private Product product;
 	private int prodQuantity;
 	private double discount;
 	private Date dateOpened;
 	private int validity;
 	private Map<String, Object> extras;
+
 	
 	public GroupEntity() {
 		super();
 	}
 
-	public GroupEntity(String groupId, UserEntity groupInitiator, int numOfMembers, List<UserEntity> members,
-			ProductEntity product, int prodQuantity, double discount, Date dateOpened, int validity,
+	public GroupEntity(String groupId, User groupInitiator, int numOfMembers, List<User> members,
+			Product product, int prodQuantity, double discount, Date dateOpened, int validity,
 			Map<String, Object> extras) {
 		super();
 		this.groupId = groupId;
@@ -49,11 +54,11 @@ public class GroupEntity {
 		this.groupId = groupId;
 	}
 
-	public UserEntity getGroupInitiator() {
+	public User getGroupInitiator() {
 		return groupInitiator;
 	}
 
-	public void setGroupInitiator(UserEntity groupInitiator) {
+	public void setGroupInitiator(User groupInitiator) {
 		this.groupInitiator = groupInitiator;
 	}
 
@@ -65,19 +70,19 @@ public class GroupEntity {
 		this.numOfMembers = numOfMembers;
 	}
 
-	public List<UserEntity> getMembers() {
+	public List<User> getMembers() {
 		return members;
 	}
 
-	public void setMembers(List<UserEntity> members) {
+	public void setMembers(List<User> members) {
 		this.members = members;
 	}
 
-	public ProductEntity getProduct() {
+	public Product getProduct() {
 		return product;
 	}
 
-	public void setProduct(ProductEntity product) {
+	public void setProduct(Product product) {
 		this.product = product;
 	}
 
@@ -120,6 +125,6 @@ public class GroupEntity {
 	public void setExtras(Map<String, Object> extras) {
 		this.extras = extras;
 	}
-	
+
 	
 }

@@ -6,10 +6,10 @@ import java.util.Map;
 
 public class GroupBoundary {
 	private String groupId;
-	private UserBoundary groupInitiator;
+	private User groupInitiator;
 	private int numOfMembers;
-	private List<UserBoundary> members;
-	private ProductBoundary product;
+	private List<User> members;
+	private Product product;
 	private int prodQuantity;
 	private double discount;
 	private Date dateOpened;
@@ -20,8 +20,8 @@ public class GroupBoundary {
 		super();
 	}
 
-	public GroupBoundary(String groupId, UserBoundary groupInitiator, int numOfMembers, List<UserBoundary> members,
-			ProductBoundary product, int prodQuantity, double discount, Date dateOpened, int validity,
+	public GroupBoundary(String groupId, User groupInitiator, int numOfMembers, List<User> members,
+			Product product, int prodQuantity, double discount, Date dateOpened, int validity,
 			Map<String, Object> extras) {
 		super();
 		this.groupId = groupId;
@@ -44,11 +44,11 @@ public class GroupBoundary {
 		this.groupId = groupId;
 	}
 
-	public UserBoundary getGroupInitiator() {
+	public User getGroupInitiator() {
 		return groupInitiator;
 	}
 
-	public void setGroupInitiator(UserBoundary groupInitiator) {
+	public void setGroupInitiator(User groupInitiator) {
 		this.groupInitiator = groupInitiator;
 	}
 
@@ -60,19 +60,19 @@ public class GroupBoundary {
 		this.numOfMembers = numOfMembers;
 	}
 
-	public List<UserBoundary> getMembers() {
+	public List<User> getMembers() {
 		return members;
 	}
 
-	public void setMembers(List<UserBoundary> members) {
+	public void setMembers(List<User> members) {
 		this.members = members;
 	}
 
-	public ProductBoundary getProduct() {
+	public Product getProduct() {
 		return product;
 	}
 
-	public void setProduct(ProductBoundary product) {
+	public void setProduct(Product product) {
 		this.product = product;
 	}
 
@@ -118,11 +118,12 @@ public class GroupBoundary {
 
 	@Override
 	public String toString() {
-		return "GroupBoundary [groupId=" + this.groupId + ", groupInitiator=" + this.groupInitiator + ", numOfMembers="
-				+ this.numOfMembers + ", members=" + this.members + ", product=" + this.product + ", prodQuantity=" + this.prodQuantity
-				+ ", discount=" + this.discount + ", dateOpened=" + this.dateOpened + ", validity=" + this.validity + ", extras="
-				+ this.extras + "]";
+		return "GroupBoundary [groupId=" + groupId + ", groupInitiator=" + groupInitiator + ", numOfMembers="
+				+ numOfMembers + ", members=" + members + ", product=" + product + ", prodQuantity=" + prodQuantity
+				+ ", discount=" + discount + ", dateOpened=" + dateOpened + ", validity=" + validity + ", extras="
+				+ extras + "]";
 	}
+
 
 	
 	

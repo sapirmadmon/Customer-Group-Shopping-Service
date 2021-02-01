@@ -1,13 +1,13 @@
 package com.example.demo.boundaries;
 
-public class UserBoundary {
+public class User {
 	private String email;
 
-	public UserBoundary() {
+	public User() {
 		super();
 	}
 
-	public UserBoundary(String email) {
+	public User(String email) {
 		super();
 		this.email = email;
 	}
