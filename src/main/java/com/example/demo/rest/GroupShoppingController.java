@@ -32,19 +32,6 @@ public class GroupShoppingController {
 		return this.groupShoppingService.createGroup(group);
 	}
 	
-	
-//	@RequestMapping(path = "/groups",
-//			method = RequestMethod.GET,
-//			produces = MediaType.APPLICATION_JSON_VALUE)
-//	public GroupBoundary[] getAllGroups(
-//			@RequestParam(name = "sortBy", required = false, defaultValue = "dateOpened") String sortAttr,
-//			@RequestParam(name = "sortOrder", required = false, defaultValue = "ASC") String order,
-//			@RequestParam(name = "page", required = false, defaultValue = "0") int page,
-//			@RequestParam(name = "size", required = false, defaultValue = "10") int size
-//			) {
-//		return this.groupShoppingService.getAllGroups(size, page, sortAttr, order)
-//		.toArray(new GroupBoundary[0]);
-//	}
 
 	
 	@RequestMapping(path = "/groups",

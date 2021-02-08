@@ -22,6 +22,8 @@ import com.example.demo.exceptions.EmptyProductException;
 import com.example.demo.exceptions.GroupNotFoundException;
 import com.example.demo.exceptions.InvalidDiscountException;
 import com.example.demo.exceptions.InvalidEmailException;
+import com.example.demo.exceptions.InvalidProdQuantityException;
+import com.example.demo.exceptions.InvalidValidityException;
 import com.example.demo.validator.Validator;
 
 @Service
@@ -99,8 +101,18 @@ public class GroupShoppingServiceWithDB implements GroupShoppingService{
 		}
 
 		//Check if is discount entered is valid
-		if(group.getDiscount() < 0 || group.getDiscount() > 1) {
-			throw new InvalidDiscountException("The discount entered is invalid");
+		if(group.getDiscount() <= 0 || group.getDiscount() > 1) {
+			throw new InvalidDiscountException("The discount entered is invalid. The discount should be written in the format: 0.x");
+		}
+		
+		//Check if ProdQuantity is greater than 0
+		if(group.getProdQuantity() <= 0) {
+			throw new InvalidProdQuantityException("Prod quantity must be greater than 0");
+		}
+			
+		//Check if Group validity is greater than 0
+		if(group.getValidity() <= 0) {
+			throw new InvalidValidityException("Group validity must be greater than 0");
 		}
 		
 		
